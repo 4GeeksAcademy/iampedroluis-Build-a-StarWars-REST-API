@@ -243,6 +243,28 @@ def add_favorite_planet(user_id, planet_id):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/favorite/planet/<int:user_id>/<int:planet_id>', methods=['DELETE'])
+def delete_planet(user_id, planet_id):
+    try:
+        user = User.query.get(user_id)
+        planet = Planets.query.get(planet_id)
+        if user is None:
+            return jsonify({"msg": "El usuario no existe"}), 404
+        if planet is None:
+            return jsonify({"msg": "El planeta no existe"}), 404
+
+        favorite = Favorites.query.filter_by(user_id=user_id, planet_id=planet_id).first()
+
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({"msg": f"El planeta {planet.name} se eliminó de la lista de favoritos del usuario"}), 200
+        else:
+            return jsonify({"msg": f"El planeta {planet.name} no estaba en la lista de favoritos del usuario"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/favorite/people/<int:user_id>/<int:people_id>", methods=["POST"])
 def add_favorite_people(user_id, people_id):
     try:
@@ -269,6 +291,28 @@ def add_favorite_people(user_id, people_id):
         return jsonify({"mensaje": f"El People {people.name} se ha añadido a la lista de favoritos del usuario"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/favorite/people/<int:user_id>/<int:people_id>', methods=['DELETE'])
+def delete_people(user_id, people_id):
+    try:
+        user = User.query.get(user_id)
+        people = People.query.get(people_id)
+        if user is None:
+            return jsonify({"msg": "El usuario no existe"}), 404
+        if people  is None:
+            return jsonify({"msg": "El people no existe"}), 404
+
+        favorite = Favorites.query.filter_by(user_id=user_id, people_id=people_id).first()
+
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({"msg": f"El people  {people.name} se eliminó de la lista de favoritos del usuario"}), 200
+        else:
+            return jsonify({"msg": f"El people {people.name} no estaba en la lista de favoritos del usuario"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 @app.route("/favorite/starship/<int:user_id>/<int:starship_id>", methods=["POST"])
@@ -298,6 +342,26 @@ def add_favorite_starship(user_id, starship_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/favorite/starship/<int:user_id>/<int:starship_id>', methods=['DELETE'])
+def delete_starship(user_id, starship_id):
+    try:
+        user = User.query.get(user_id)
+        starship = Starships.query.get(starship_id)
+        if user is None:
+            return jsonify({"msg": "El usuario no existe"}), 404
+        if starship  is None:
+            return jsonify({"msg": "El starship no existe"}), 404
+
+        favorite = Favorites.query.filter_by(user_id=user_id, starship_id=starship_id).first()
+
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({"msg": f"El starship  {starship.name} se eliminó de la lista de favoritos del usuario"}), 200
+        else:
+            return jsonify({"msg": f"El starship {starship.name} no estaba en la lista de favoritos del usuario"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # this only runs if `$ python src/app.py` is executed
